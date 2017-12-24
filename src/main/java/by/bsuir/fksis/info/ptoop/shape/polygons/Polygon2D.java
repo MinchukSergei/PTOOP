@@ -46,7 +46,7 @@ public class Polygon2D implements Shape {
         return points;
     }
 
-    public void setPoints(List<Point2D> points) {
+    protected void setPoints(List<Point2D> points) {
         this.points = points;
     }
 
