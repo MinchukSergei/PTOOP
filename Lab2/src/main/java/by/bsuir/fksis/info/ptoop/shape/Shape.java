@@ -1,7 +1,14 @@
 package by.bsuir.fksis.info.ptoop.shape;
 
-import java.awt.*;
+import by.bsuir.fksis.info.ptoop.drawing.shape.ShapeDrawer;
 
+/**
+ * Shape interface
+ */
 public interface Shape {
-    void draw(Graphics2D graphics2D);
+    /**
+     * returns shape drawer
+     * @return shape drawer
+     */
+    ShapeDrawer getShapeDrawer();
 }
