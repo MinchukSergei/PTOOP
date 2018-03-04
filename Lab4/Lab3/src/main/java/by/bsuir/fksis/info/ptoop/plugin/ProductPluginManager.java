@@ -12,9 +12,28 @@ import java.util.List;
  */
 public class ProductPluginManager implements ProductPlugin {
     private List<String> jars;
+    private URLClassLoader urlClassLoader;
 
     public ProductPluginManager(List<String> jars) {
         this.jars = jars;
+        buildClassLoader();
+    }
+
+    public URLClassLoader getUrlClassLoader() {
+        return urlClassLoader;
+    }
+
+    private void buildClassLoader() {
+        List<URL> urls = new ArrayList<>();
+        for (String jar : jars) {
+            File jarFile = new File(jar);
+            try {
+                urls.add(jarFile.toURI().toURL());
+            } catch (MalformedURLException e) {
+                System.err.println(jarFile + " is invalid.");
+            }
+        }
+        urlClassLoader = new URLClassLoader(urls.toArray(new URL[urls.size()]), this.getClass().getClassLoader());
     }
 
     @Override
@@ -48,13 +67,12 @@ public class ProductPluginManager implements ProductPlugin {
     private ProductPlugin getProductPlugin(String jar) {
         try {
             File jarFile = new File(jar);
-            URLClassLoader jarURL = new URLClassLoader(new URL[] {jarFile.toURI().toURL()}, this.getClass().getClassLoader());
             String productImplPackage = "by.bsuir.fksis.info.ptoop.plugin";
             String productImplPath = productImplPackage + "." + jarFile.getName().substring(0, jarFile.getName().length() - 4);
-            return (ProductPlugin) Class.forName( productImplPath + "Impl", true, jarURL).newInstance();
+            return (ProductPlugin) Class.forName( productImplPath + "Impl", true, urlClassLoader).newInstance();
         } catch (ClassNotFoundException ignored) {
             System.err.println(jar + " was not found.");
-        } catch (IllegalAccessException | InstantiationException | MalformedURLException e) {
+        } catch (IllegalAccessException | InstantiationException e) {
             System.err.println(jar + " has a problem while creating plugin implementation: jarname + Impl.class");
         }
         return null;

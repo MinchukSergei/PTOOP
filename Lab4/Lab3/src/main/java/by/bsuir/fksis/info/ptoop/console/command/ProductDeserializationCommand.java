@@ -1,6 +1,7 @@
 package by.bsuir.fksis.info.ptoop.console.command;
 
 import by.bsuir.fksis.info.ptoop.console.ProductMenu;
+import by.bsuir.fksis.info.ptoop.plugin.ProductPluginManager;
 import by.bsuir.fksis.info.ptoop.products.Product;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
@@ -88,7 +89,8 @@ public class ProductDeserializationCommand extends AbstractCommand {
         String productTypeFieldName = jp.nextFieldName();
         if ("productType".equals(productTypeFieldName)) {
             String productType = jp.nextTextValue();
-            Product newProduct = (Product) Class.forName(productType).newInstance();
+            ProductPluginManager productPluginManager = (ProductPluginManager) productMenu.getProductPlugin();
+            Product newProduct = (Product) Class.forName(productType, true, productPluginManager.getUrlClassLoader()).newInstance();
             jp.nextFieldName();
             int cost = jp.nextIntValue(0);
             jp.nextFieldName();

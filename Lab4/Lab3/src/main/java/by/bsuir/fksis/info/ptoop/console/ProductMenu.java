@@ -33,6 +33,10 @@ public class ProductMenu {
         return productPlugin.getProducts();
     }
 
+    public ProductPlugin getProductPlugin() {
+        return productPlugin;
+    }
+
     /**
      * Sets product list
      * @param productList product list
@@ -41,7 +45,8 @@ public class ProductMenu {
         this.productList = productList;
     }
 
-    public ProductMenu(ProductPlugin productPlugin) {
+    public
+    ProductMenu(ProductPlugin productPlugin) {
         productList = new ArrayList<>();
         bufferedReader = new BufferedReader(new InputStreamReader(System.in));
         this.productPlugin = productPlugin;
